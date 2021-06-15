@@ -6,7 +6,7 @@ module.exports = {
   },
   parserOptions: { ecmaVersion: 8 },
   ignorePatterns: ['node_modules/*', '.next/*', '.out/*', '!.prettierrc.js'],
-  extends: ['next', 'plugin:prettier/recommended'],
+  extends: ['plugin:prettier/recommended', 'next'],
   overrides: [
     {
       files: ['**/*.ts', '**/*.tsx'],
@@ -44,4 +44,4 @@ module.exports = {
       },
     },
   ],
-}
+};
