@@ -23,7 +23,7 @@ const Home: React.FC = () => {
             <DecoShape
               drag
               dragConstraints={dragConstraints}
-              ratio={1 / (1 + (seed % 2))}
+              ratio={1 / (3 - (seed % 3))}
               color={colours[seed % colours.length]}
             />
           </GridItem>
