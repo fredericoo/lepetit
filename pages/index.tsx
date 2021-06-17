@@ -51,19 +51,12 @@ const Home: React.FC = () => {
             >
               <AnimateWords>Produção cultural sensível & com afeto</AnimateWords>
             </Heading>
-            <Text fontFamily="heading" letterSpacing="-.01em" fontSize="lg" fontWeight="400">
+            <Text fontFamily="heading" letterSpacing="-.01em" fontSize="lg" fontWeight="400" mb={4}>
               Texto de exemplo pra preencher linguiça Lorem ipsum dolor sit amet, consectetur
               adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
               Bibendum est ultricies integer quis. Iaculis urna id volutpat lacus laoreet.
             </Text>
-            <Button
-              onClick={() => setSeed(~~(Math.random() * 100))}
-              variant="outline"
-              colorScheme="blue"
-              borderRadius="full"
-            >
-              Aleatorizar
-            </Button>
+            <Button onClick={() => setSeed(~~(Math.random() * 100))}>Sortear formas</Button>
           </GridItem>
           <GridItem gridColumn="3 / -1" gridRow="2">
             <Heading as="h2">Sobre</Heading>

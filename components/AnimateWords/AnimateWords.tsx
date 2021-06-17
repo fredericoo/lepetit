@@ -13,9 +13,11 @@ const motionBlock = {
 const motionWord = {
   hidden: {
     color: 'red',
+    rotate: 15,
     y: 100,
   },
   visible: {
+    rotate: 0,
     y: 0,
     color: 'black',
     transition: {
@@ -34,7 +36,7 @@ const AnimateWords: React.FC = ({ children }) => {
   return (
     <MotionBox variants={motionBlock} initial="hidden" animate="visible">
       {words.map((word, key) => (
-        <Box as="span" key={key} overflow="hidden" display="inline-block" py=".3em" my="-.4em">
+        <Box as="span" key={key} overflow="hidden" display="inline-block" py=".2em" my="-.3em">
           <MotionBox as="span" display="inline-block" variants={motionWord} mr=".2em">
             {word}
           </MotionBox>
