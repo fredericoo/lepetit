@@ -12,8 +12,8 @@ const Home: React.FC = () => {
   const [seed, setSeed] = useState(0);
 
   return (
-    <Box overflow="hidden">
-      <Container maxW="container.xl" ref={dragConstraints}>
+    <Box overflow="hidden" ref={dragConstraints}>
+      <Container maxW="container.lg">
         <Grid
           gap={4}
           templateColumns={{ md: 'repeat(12, 1fr)' }}
@@ -33,13 +33,19 @@ const Home: React.FC = () => {
                 key={key}
                 drag
                 dragConstraints={dragConstraints}
-                ratio={~~(1 + ((seed * key + 1) % 2))}
-                color={colours[(seed * key + 1) % colours.length]}
-                rounded={roundnesses[(seed * key + 1) % roundnesses.length]}
+                ratio={1 + ((seed * key + 1) % 2)}
+                color={colours[(seed * key + seed + 1) % colours.length]}
+                rounded={roundnesses[(seed * key + seed) % roundnesses.length]}
               />
             ))}
           </GridItem>
-          <GridItem gridColumn="7 / -1" gridRow="1" alignSelf="center" zIndex="2">
+          <GridItem
+            gridColumn="7 / -1"
+            gridRow="1"
+            alignSelf="center"
+            zIndex="2"
+            pointerEvents="none"
+          >
             <Heading
               as="h1"
               size="4xl"
@@ -56,13 +62,24 @@ const Home: React.FC = () => {
               adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
               Bibendum est ultricies integer quis. Iaculis urna id volutpat lacus laoreet.
             </Text>
-            <Button onClick={() => setSeed(~~(Math.random() * 100))}>Sortear formas</Button>
+            <Button pointerEvents="all" onClick={() => setSeed(~~(Math.random() * 100))}>
+              Sortear formas
+            </Button>
           </GridItem>
           <GridItem gridColumn="3 / -1" gridRow="2">
-            <Heading as="h2">Sobre</Heading>
+            <Heading
+              size="4xl"
+              fontFamily="display"
+              letterSpacing="tight"
+              fontWeight="400"
+              lineHeight="1"
+              as="h2"
+            >
+              Sobre
+            </Heading>
           </GridItem>
           <GridItem gridColumn="4 / 11" gridRow="3">
-            <Text>
+            <Text fontSize="xl" fontFamily="heading">
               A Le Petit foi fundada em 2011 em Minas Gerais. A empresa é voltada para assessoria de
               projetos na área cultural, produção editorial, desenvolvimento e acompanhamento
               estratégicos de marcas e identidades visuais. É signatária da WEPs da ONU Mulheres,

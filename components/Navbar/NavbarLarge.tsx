@@ -5,15 +5,8 @@ import Logo from './Logo';
 import { MenuProps } from './types';
 
 const NavbarLarge: React.FC<MenuProps> = ({ menu }) => (
-  <Box
-    as="nav"
-    data-testid="navbar-large"
-    position="sticky"
-    top={0}
-    zIndex="sticky"
-    mixBlendMode="multiply"
-  >
-    <Container maxW="container.xl">
+  <Box as="nav" data-testid="navbar-large" position="fixed" w="100%" top={0} zIndex="sticky">
+    <Container maxW="container.lg">
       <HStack spacing={4} py={3}>
         <Box>
           <Logo />

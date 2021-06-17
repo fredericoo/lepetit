@@ -21,21 +21,24 @@ const DecoShape: React.FC<DecoShapeProps> = ({
 }) => {
   return (
     <MotionBox
-      mixBlendMode="multiply"
       drag={drag}
-      cursor="grab"
-      _active={{ cursor: 'grabbing' }}
       dragConstraints={dragConstraints}
       dragElastic={0.1}
       dragTransition={{ bounceStiffness: 100, bounceDamping: 20 }}
-      borderTopRadius={rounded != 'bottom' ? 'full' : 'none'}
-      borderBottomRadius={rounded != 'top' ? 'full' : 'none'}
-      css={{ transition: '.3s cubic-bezier(0.16, 1, 0.3, 1)' }}
-      bg={color}
-      w="100%"
-      h="0px"
-      pb={`${100 / ratio}%`}
-    />
+      mixBlendMode="multiply"
+    >
+      <Box
+        cursor="grab"
+        _active={{ cursor: 'grabbing' }}
+        borderTopRadius={rounded != 'bottom' ? 'full' : 'none'}
+        borderBottomRadius={rounded != 'top' ? 'full' : 'none'}
+        css={{ transition: '.3s cubic-bezier(0.16, 1, 0.3, 1)' }}
+        bg={color}
+        w="100%"
+        h="0px"
+        pb={`${100 / ratio}%`}
+      />
+    </MotionBox>
   );
 };
 
