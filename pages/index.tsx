@@ -15,7 +15,7 @@ const Home: React.FC = () => {
     <Box overflow="hidden" ref={dragConstraints}>
       <Container maxW="container.lg">
         <Grid
-          gap={4}
+          gap={8}
           templateColumns={{ md: 'repeat(12, 1fr)' }}
           templateRows="80vh min-content 1fr"
         >
@@ -35,17 +35,11 @@ const Home: React.FC = () => {
                 dragConstraints={dragConstraints}
                 ratio={1 + ((seed * key + 1) % 2)}
                 color={colours[(seed * key + seed + 1) % colours.length]}
-                rounded={roundnesses[(seed * key + seed) % roundnesses.length]}
+                rounded={roundnesses[(seed * key + seed + 1) % roundnesses.length]}
               />
             ))}
           </GridItem>
-          <GridItem
-            gridColumn="7 / -1"
-            gridRow="1"
-            alignSelf="center"
-            zIndex="2"
-            pointerEvents="none"
-          >
+          <GridItem gridColumn="7 / -1" gridRow="1" alignSelf="center" pointerEvents="none">
             <Heading
               as="h1"
               size="4xl"

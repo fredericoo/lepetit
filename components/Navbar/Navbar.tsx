@@ -15,7 +15,13 @@ const Navbar: React.FC = () => {
 
   const Component = isLarge ? NavbarLarge : NavbarSmall;
 
-  return <Component menu={config?.data?.menu} currentPath={asPath} />;
+  return (
+    <Component
+      key={isLarge ? 'navbar-large' : 'navbar-small'}
+      menu={config?.data?.menu}
+      currentPath={asPath}
+    />
+  );
 };
 
 export default Navbar;
