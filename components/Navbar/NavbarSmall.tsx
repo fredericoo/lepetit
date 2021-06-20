@@ -9,6 +9,7 @@ import {
   DrawerContent,
   DrawerHeader,
   DrawerBody,
+  Flex,
 } from '@chakra-ui/react';
 import DocLink from 'app/components/DocLink';
 import Logo from '../Logo';
@@ -31,7 +32,7 @@ const NavbarSmall: React.FC<MenuProps> = ({ menu, currentPath }) => {
               <IconMenu w="1.5rem" />
             </Button>
           </Box>
-          <Box maxW="81px">
+          <Box w="81px">
             <Logo />
           </Box>
           <Box display="flex" flex="1"></Box>
@@ -46,23 +47,26 @@ const NavbarSmall: React.FC<MenuProps> = ({ menu, currentPath }) => {
             </Button>
           </DrawerHeader>
           <DrawerBody p={3}>
-            {menu?.map(({ header_name, header_page }) => (
-              <DocLink key={header_name} doc={header_page} passHref>
-                <Box
-                  display="block"
-                  as="a"
-                  p={3}
-                  bg="orange"
-                  mb="2px"
-                  textTransform="uppercase"
-                  letterSpacing="wider"
-                  color="cream"
-                  fontWeight="bold"
-                >
-                  {header_name}
-                </Box>
-              </DocLink>
-            ))}
+            <Flex direction="column">
+              {menu?.map(({ header_name, header_page }) => (
+                <DocLink key={header_name} doc={header_page} passHref>
+                  <Box
+                    alignSelf="flex-start"
+                    display="inline-block"
+                    as="a"
+                    p={3}
+                    bg="orange"
+                    mb="2px"
+                    textTransform="uppercase"
+                    letterSpacing="wider"
+                    color="cream"
+                    fontWeight="bold"
+                  >
+                    {header_name}
+                  </Box>
+                </DocLink>
+              ))}
+            </Flex>
           </DrawerBody>
         </DrawerContent>
       </Drawer>

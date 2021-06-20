@@ -29,7 +29,7 @@ const ProjectThumb: React.FC<ProjectThumbProps> = ({ data, href = '/' }) => {
           layout="responsive"
           bg="pink"
         />
-        <Box color="charcoal" p={6}>
+        <Box color="charcoal" p={{ base: 4, md: 6 }}>
           <Text fontSize="xs" textTransform="uppercase" letterSpacing="wider" fontWeight="700">
             {categories
               .filter((cat) => cat.isActive)

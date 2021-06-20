@@ -9,7 +9,6 @@ import {
   SimpleGrid,
 } from '@chakra-ui/react';
 import DecoShape from '../components/DecoShape/DecoShape';
-import AnimateWords from '../components/AnimateWords/AnimateWords';
 import { useRef, useState } from 'react';
 import { GetStaticProps } from 'next';
 import { client, getHeaderAndFooter } from 'app/lib/prismic';
@@ -89,7 +88,7 @@ const Home: React.FC<HomeProps> = ({ projects }) => {
               lineHeight="1"
               mb={6}
             >
-              <AnimateWords>Produção cultural sensível & com afeto</AnimateWords>
+              Produção cultural sensível & com afeto
             </Heading>
             <Text fontFamily="heading" letterSpacing="-.01em" fontSize="lg" fontWeight="400" mb={4}>
               Texto de exemplo pra preencher linguiça Lorem ipsum dolor sit amet, consectetur
@@ -158,7 +157,7 @@ const Home: React.FC<HomeProps> = ({ projects }) => {
               <DecoShape ratio={3} color={colours[seed % colours.length]} />
             </Box>
           </Box>
-          <SimpleGrid columns={{ base: 2, lg: 3 }} gap={8} zIndex={2}>
+          <SimpleGrid columns={{ base: 2, md: 3 }} gap={{ base: 4, lg: 8 }} zIndex={2}>
             {projects.map((project) => (
               <ProjectThumb key={project.id} data={project.data} href={resolveHref(project)} />
             ))}
