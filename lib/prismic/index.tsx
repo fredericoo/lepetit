@@ -4,15 +4,13 @@ import { Link } from 'prismic-reactjs';
 
 export const apiEndpoint = 'https://lepetit.cdn.prismic.io/api/v2';
 
-export const hrefResolver = (doc: Document | Link): string => {
+export const resolveHref = (doc: Document | Link): string => {
   if ('link_type' in doc && doc.link_type === 'Web' && doc.url) return doc.url;
   switch (doc.type) {
     case 'home':
       return `/`;
-    case 'membro':
-      return `/equipe/${doc.uid}`;
-    case 'post':
-      return `/posts/${doc.uid}`;
+    case 'projeto':
+      return `/projetos/${doc.uid}`;
     default:
       return `/${doc.uid}`;
   }

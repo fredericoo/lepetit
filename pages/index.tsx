@@ -17,6 +17,8 @@ import PrismicDocument from 'app/lib/prismic/types/Document';
 import HeaderFooterData from 'app/lib/prismic/types/HeaderFooterData';
 import ProjectData from 'app/lib/prismic/types/ProjectDocument';
 import ProjectThumb from 'app/components/ProjectThumb';
+import { resolveHref } from 'app/lib/prismic';
+import IconShuffle from 'app/components/Icon/IconShuffle';
 
 type HomeProps = {
   projects: PrismicDocument<ProjectData>[];
@@ -30,16 +32,20 @@ const colours = ['orange', 'pink', 'blue', 'yellow'];
 const Home: React.FC<HomeProps> = ({ projects }) => {
   const dragConstraints = useRef(null);
   const [seed, setSeed] = useState(0);
+  const [hasInteracted, setHasInteracted] = useState(false);
 
   return (
     <Box overflow="hidden" ref={dragConstraints}>
       <Container maxW="container.lg" py={8}>
-        <Grid
-          gap={8}
-          templateColumns={{ md: 'repeat(12, 1fr)' }}
-          templateRows="80vh min-content 1fr"
-        >
-          <GridItem gridColumn="1 / 4" gridRow="1 / 4" zIndex="docked" mixBlendMode="multiply">
+        <Grid gap={8} templateColumns="repeat(12, 1fr)" templateRows="80vh min-content 1fr">
+          <GridItem
+            gridColumn={{ base: '1 / 8', lg: '1 / 4' }}
+            gridRow="1 / 4"
+            zIndex="docked"
+            mixBlendMode="multiply"
+            pos="relative"
+            onMouseDown={() => setHasInteracted(true)}
+          >
             <DecoShape
               drag
               dragConstraints={dragConstraints}
@@ -47,20 +53,33 @@ const Home: React.FC<HomeProps> = ({ projects }) => {
               color={colours[seed % colours.length]}
             />
           </GridItem>
-          <GridItem gridColumn="4 / 7" gridRow="1/4">
+          <GridItem
+            gridColumn={{ base: '8 / -1', lg: '4 / 7' }}
+            gridRow="1 / 4"
+            mixBlendMode="multiply"
+            zIndex="docked"
+            alignSelf={{ base: 'end', lg: 'start' }}
+            onMouseDown={() => setHasInteracted(true)}
+          >
             {new Array(4).fill(0).map((_, key) => (
-              <Box key={key} zIndex="docked" mixBlendMode="multiply">
+              <Box key={key}>
                 <DecoShape
                   drag
                   dragConstraints={dragConstraints}
                   ratio={1 + ((seed * key + 1) % 2)}
                   color={colours[(seed * key + seed + 1) % colours.length]}
                   rounded={roundnesses[(seed * key + seed + 1) % roundnesses.length]}
+                  label={!hasInteracted && key === 0 ? 'arraste-me' : undefined}
                 />
               </Box>
             ))}
           </GridItem>
-          <GridItem gridColumn="7 / -1" gridRow="1" alignSelf="center" pointerEvents="none">
+          <GridItem
+            gridColumn={{ base: '4 / -1', lg: '7 / -1' }}
+            gridRow="1"
+            alignSelf="center"
+            pointerEvents="none"
+          >
             <Heading
               as="h1"
               size="3xl"
@@ -77,11 +96,16 @@ const Home: React.FC<HomeProps> = ({ projects }) => {
               adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
               Bibendum est ultricies integer quis. Iaculis urna id volutpat lacus laoreet.
             </Text>
-            <Button pointerEvents="all" onClick={() => setSeed(~~(Math.random() * 100))}>
-              Sortear formas
+            <Button
+              p={4}
+              pointerEvents="all"
+              onClick={() => setSeed(~~(Math.random() * 1000))}
+              zIndex="overlay"
+            >
+              <IconShuffle w="1rem" />
             </Button>
           </GridItem>
-          <GridItem gridColumn="3 / -1" gridRow="2">
+          <GridItem gridColumn={{ base: '1 / 9', lg: '3 / -1' }} gridRow="2">
             <Heading
               size="4xl"
               fontFamily="display"
@@ -93,8 +117,8 @@ const Home: React.FC<HomeProps> = ({ projects }) => {
               Sobre
             </Heading>
           </GridItem>
-          <GridItem gridColumn="4 / 11" gridRow="3">
-            <Text fontSize="xl" fontFamily="heading">
+          <GridItem gridColumn={{ base: '1 / 9', lg: '4 / 11' }} gridRow="3">
+            <Text fontSize={{ base: 'lg', lg: 'xl' }} fontFamily="heading">
               A Le Petit foi fundada em 2011 em Minas Gerais. A empresa é voltada para assessoria de
               projetos na área cultural, produção editorial, desenvolvimento e acompanhamento
               estratégicos de marcas e identidades visuais. É signatária da WEPs da ONU Mulheres,
@@ -117,9 +141,26 @@ const Home: React.FC<HomeProps> = ({ projects }) => {
           >
             Projetos
           </Heading>
-          <SimpleGrid columns={{ base: 1, lg: 3 }} gap={8}>
+          <Box
+            pointerEvents="none"
+            zIndex={0}
+            display="flex"
+            flexDirection="column"
+            w="100vw"
+            position="absolute"
+            left="0"
+            overflow="hidden"
+          >
+            <Box w="33%">
+              <DecoShape ratio={1} color={colours[(seed + 2) % colours.length]} />
+            </Box>
+            <Box w="99%" alignSelf="flex-end" transform="translateX(33%)">
+              <DecoShape ratio={3} color={colours[seed % colours.length]} />
+            </Box>
+          </Box>
+          <SimpleGrid columns={{ base: 2, lg: 3 }} gap={8} zIndex={2}>
             {projects.map((project) => (
-              <ProjectThumb key={project.id} data={project.data} />
+              <ProjectThumb key={project.id} data={project.data} href={resolveHref(project)} />
             ))}
           </SimpleGrid>
         </Container>

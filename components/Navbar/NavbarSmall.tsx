@@ -9,12 +9,13 @@ import {
   DrawerContent,
   DrawerHeader,
   DrawerBody,
-  CloseButton,
 } from '@chakra-ui/react';
 import DocLink from 'app/components/DocLink';
 import Logo from '../Logo';
 import { MenuProps } from './types';
 import { useEffect } from 'react';
+import IconClose from '../Icon/IconClose';
+import IconMenu from '../Icon/IconMenu';
 
 const NavbarSmall: React.FC<MenuProps> = ({ menu, currentPath }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -26,32 +27,42 @@ const NavbarSmall: React.FC<MenuProps> = ({ menu, currentPath }) => {
       <Container maxW="container.lg">
         <HStack spacing={4} py={3}>
           <Box flex="1">
-            <Button data-testid="toggle-menu" variant="outline" size="sm" onClick={onOpen}>
-              Menu
+            <Button p={2} data-testid="toggle-menu" onClick={onOpen}>
+              <IconMenu w="1.5rem" />
             </Button>
           </Box>
-          <Box>
+          <Box maxW="81px">
             <Logo />
           </Box>
           <Box display="flex" flex="1"></Box>
         </HStack>
       </Container>
-      <Drawer placement="left" onClose={onClose} isOpen={isOpen}>
-        <DrawerOverlay />
-        <DrawerContent>
+      <Drawer placement="top" onClose={onClose} isOpen={isOpen}>
+        <DrawerOverlay bg="orange" transform={isOpen ? 'none' : 'translateY(-100%)'} />
+        <DrawerContent bg="cream" boxShadow="none" zIndex="docked">
           <DrawerHeader p={3}>
-            <CloseButton onClick={onClose} />
+            <Button p={2} onClick={onClose}>
+              <IconClose w="1.5rem" />
+            </Button>
           </DrawerHeader>
           <DrawerBody p={3}>
-            <Box borderRadius="md" overflow="hidden">
-              {menu?.map(({ header_name, header_page }) => (
-                <DocLink key={header_name} doc={header_page} passHref>
-                  <Box display="block" as="a" p={3} bg="gray.100" mb="1px">
-                    {header_name}
-                  </Box>
-                </DocLink>
-              ))}
-            </Box>
+            {menu?.map(({ header_name, header_page }) => (
+              <DocLink key={header_name} doc={header_page} passHref>
+                <Box
+                  display="block"
+                  as="a"
+                  p={3}
+                  bg="orange"
+                  mb="2px"
+                  textTransform="uppercase"
+                  letterSpacing="wider"
+                  color="cream"
+                  fontWeight="bold"
+                >
+                  {header_name}
+                </Box>
+              </DocLink>
+            ))}
           </DrawerBody>
         </DrawerContent>
       </Drawer>

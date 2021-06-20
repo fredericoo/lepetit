@@ -1,5 +1,5 @@
 import { default as NextLink, LinkProps } from 'next/link';
-import { hrefResolver } from 'lib/prismic';
+import { resolveHref } from 'lib/prismic';
 import { Document } from '@prismicio/client/types/documents';
 
 type DocLinkProps = {
@@ -7,7 +7,7 @@ type DocLinkProps = {
 } & Omit<LinkProps, 'href'>;
 
 const DocLink: React.FC<DocLinkProps> = ({ doc, ...props }) => {
-  const href = hrefResolver(doc);
+  const href = resolveHref(doc);
   return <NextLink href={href} {...props} />;
 };
 

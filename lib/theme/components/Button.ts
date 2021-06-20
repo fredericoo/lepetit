@@ -22,6 +22,17 @@ const Button = {
         color: 'cream',
       },
     },
+    link: {
+      color: 'inherit',
+      textTransform: 'uppercase',
+      fontSize: 'sm',
+      letterSpacing: 'wider',
+      fontWeight: 400,
+      _hover: {
+        color: 'orange',
+        textDecoration: 'none',
+      },
+    },
   },
 };
 
