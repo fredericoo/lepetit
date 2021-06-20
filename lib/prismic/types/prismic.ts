@@ -4,6 +4,7 @@ interface BaseImage {
     width: number;
     height: number;
   };
+  alt: string;
 }
 export type Image = BaseImage & Record<string, BaseImage>;
 

@@ -25,7 +25,6 @@ const DecoShape: React.FC<DecoShapeProps> = ({
       dragConstraints={dragConstraints}
       dragElastic={0.1}
       dragTransition={{ bounceStiffness: 100, bounceDamping: 20 }}
-      mixBlendMode="multiply"
     >
       <Box
         cursor="grab"

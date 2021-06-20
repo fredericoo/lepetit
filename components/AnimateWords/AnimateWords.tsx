@@ -5,21 +5,17 @@ const motionBlock = {
   hidden: {},
   visible: {
     transition: {
-      delay: 0.5,
+      delay: 1,
       staggerChildren: 0.08,
     },
   },
 };
 const motionWord = {
   hidden: {
-    color: 'red',
-    rotate: 15,
     y: 100,
   },
   visible: {
-    rotate: 0,
     y: 0,
-    color: 'black',
     transition: {
       type: 'spring',
       stiffness: 130,

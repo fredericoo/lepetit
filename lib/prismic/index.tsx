@@ -16,7 +16,10 @@ export const hrefResolver = (doc: Document | Link): string => {
     default:
       return `/${doc.uid}`;
   }
-  return '/';
 };
 
 export const client = Prismic.client(apiEndpoint);
+
+export const getHeaderAndFooter = async (): Promise<Document> => {
+  return await client.getSingle('cabecalho_rodape', {});
+};

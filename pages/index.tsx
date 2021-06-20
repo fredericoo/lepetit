@@ -1,25 +1,45 @@
-import { Grid, GridItem, Container, Heading, Text, Box, Button } from '@chakra-ui/react';
+import {
+  Grid,
+  GridItem,
+  Container,
+  Heading,
+  Text,
+  Box,
+  Button,
+  SimpleGrid,
+} from '@chakra-ui/react';
 import DecoShape from '../components/DecoShape/DecoShape';
 import AnimateWords from '../components/AnimateWords/AnimateWords';
 import { useRef, useState } from 'react';
+import { GetStaticProps } from 'next';
+import { client, getHeaderAndFooter } from 'app/lib/prismic';
+import PrismicDocument from 'app/lib/prismic/types/Document';
+import HeaderFooterData from 'app/lib/prismic/types/HeaderFooterData';
+import ProjectData from 'app/lib/prismic/types/ProjectDocument';
+import ProjectThumb from 'app/components/ProjectThumb';
+
+type HomeProps = {
+  projects: PrismicDocument<ProjectData>[];
+  headerAndFooter: PrismicDocument<HeaderFooterData>;
+};
 
 type Roundness = 'top' | 'bottom' | 'full';
 const roundnesses: Roundness[] = ['top', 'bottom', 'full'];
 const colours = ['orange', 'pink', 'blue', 'yellow'];
 
-const Home: React.FC = () => {
+const Home: React.FC<HomeProps> = ({ projects }) => {
   const dragConstraints = useRef(null);
   const [seed, setSeed] = useState(0);
 
   return (
     <Box overflow="hidden" ref={dragConstraints}>
-      <Container maxW="container.lg">
+      <Container maxW="container.lg" py={8}>
         <Grid
           gap={8}
           templateColumns={{ md: 'repeat(12, 1fr)' }}
           templateRows="80vh min-content 1fr"
         >
-          <GridItem gridColumn="1 / 4" gridRow="1 / 4">
+          <GridItem gridColumn="1 / 4" gridRow="1 / 4" zIndex="docked" mixBlendMode="multiply">
             <DecoShape
               drag
               dragConstraints={dragConstraints}
@@ -29,20 +49,21 @@ const Home: React.FC = () => {
           </GridItem>
           <GridItem gridColumn="4 / 7" gridRow="1/4">
             {new Array(4).fill(0).map((_, key) => (
-              <DecoShape
-                key={key}
-                drag
-                dragConstraints={dragConstraints}
-                ratio={1 + ((seed * key + 1) % 2)}
-                color={colours[(seed * key + seed + 1) % colours.length]}
-                rounded={roundnesses[(seed * key + seed + 1) % roundnesses.length]}
-              />
+              <Box key={key} zIndex="docked" mixBlendMode="multiply">
+                <DecoShape
+                  drag
+                  dragConstraints={dragConstraints}
+                  ratio={1 + ((seed * key + 1) % 2)}
+                  color={colours[(seed * key + seed + 1) % colours.length]}
+                  rounded={roundnesses[(seed * key + seed + 1) % roundnesses.length]}
+                />
+              </Box>
             ))}
           </GridItem>
           <GridItem gridColumn="7 / -1" gridRow="1" alignSelf="center" pointerEvents="none">
             <Heading
               as="h1"
-              size="4xl"
+              size="3xl"
               fontFamily="display"
               letterSpacing="tight"
               fontWeight="400"
@@ -83,8 +104,35 @@ const Home: React.FC = () => {
           </GridItem>
         </Grid>
       </Container>
+      <Box bg="charcoal" color="cream">
+        <Container maxW="container.lg" py={6}>
+          <Heading
+            size="4xl"
+            fontFamily="display"
+            letterSpacing="tight"
+            fontWeight="400"
+            lineHeight="1"
+            as="h2"
+            mb={8}
+          >
+            Projetos
+          </Heading>
+          <SimpleGrid columns={{ base: 1, lg: 3 }} gap={8}>
+            {projects.map((project) => (
+              <ProjectThumb key={project.id} data={project.data} />
+            ))}
+          </SimpleGrid>
+        </Container>
+      </Box>
     </Box>
   );
+};
+
+export const getStaticProps: GetStaticProps<HomeProps> = async () => {
+  const projects = await client.query('[at(document.type, "projeto")]');
+  const headerAndFooter = await getHeaderAndFooter();
+
+  return { props: { projects: projects.results || [], headerAndFooter }, revalidate: 600 };
 };
 
 export default Home;

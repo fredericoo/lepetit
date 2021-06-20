@@ -1,4 +1,3 @@
-import { Document } from '@prismicio/client/types/documents';
 import {
   Container,
   HStack,
@@ -13,7 +12,7 @@ import {
   CloseButton,
 } from '@chakra-ui/react';
 import DocLink from 'app/components/DocLink';
-import Logo from './Logo';
+import Logo from '../Logo';
 import { MenuProps } from './types';
 import { useEffect } from 'react';
 
@@ -45,10 +44,10 @@ const NavbarSmall: React.FC<MenuProps> = ({ menu, currentPath }) => {
           </DrawerHeader>
           <DrawerBody p={3}>
             <Box borderRadius="md" overflow="hidden">
-              {menu?.map(({ label, link }: { label: string; link: Document }) => (
-                <DocLink key={label} doc={link} passHref>
+              {menu?.map(({ header_name, header_page }) => (
+                <DocLink key={header_name} doc={header_page} passHref>
                   <Box display="block" as="a" p={3} bg="gray.100" mb="1px">
-                    {label}
+                    {header_name}
                   </Box>
                 </DocLink>
               ))}

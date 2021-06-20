@@ -3,6 +3,7 @@ import { ChakraProvider } from '@chakra-ui/react';
 import theme from 'app/lib/theme';
 import FontImports from 'app/components/FontImports';
 import Navbar from 'app/components/Navbar';
+import Footer from 'app/components/Footer';
 
 const App: AppComponent = ({ Component, pageProps }) => {
   return (
@@ -10,6 +11,7 @@ const App: AppComponent = ({ Component, pageProps }) => {
       <FontImports />
       <Navbar />
       <Component {...pageProps} />
+      <Footer data={pageProps?.headerAndFooter?.data} />
     </ChakraProvider>
   );
 };
