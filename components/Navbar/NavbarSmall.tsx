@@ -1,75 +1,95 @@
-import {
-  Container,
-  HStack,
-  Box,
-  Button,
-  useDisclosure,
-  Drawer,
-  DrawerOverlay,
-  DrawerContent,
-  DrawerHeader,
-  DrawerBody,
-  Flex,
-} from '@chakra-ui/react';
+import { Container, HStack, Box, Button, useDisclosure, Flex } from '@chakra-ui/react';
 import DocLink from 'app/components/DocLink';
 import Logo from '../Logo';
 import { MenuProps } from './types';
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import IconClose from '../Icon/IconClose';
 import IconMenu from '../Icon/IconMenu';
+import { motion } from 'framer-motion';
+import { useDimensions } from 'app/lib/hooks/useDimensions';
+
+const sidebar = {
+  open: (height = 1000) => ({
+    clipPath: `circle(${height * 2}px at 36px 28px)`,
+    transition: {
+      type: 'spring',
+      stiffness: 20,
+      restDelta: 2,
+    },
+  }),
+  closed: {
+    clipPath: 'circle(20px at 36px 28px)',
+    transition: {
+      type: 'spring',
+      stiffness: 400,
+      damping: 40,
+    },
+  },
+};
+
+const MotionBox = motion(Box);
 
 const NavbarSmall: React.FC<MenuProps> = ({ menu, currentPath }) => {
-  const { isOpen, onOpen, onClose } = useDisclosure();
-
+  const { isOpen, onClose, onToggle } = useDisclosure();
+  const containerRef = useRef<HTMLElement | null>(null);
+  const { height } = useDimensions(containerRef);
   useEffect(() => onClose(), [currentPath, onClose]);
 
   return (
     <Box as="nav" data-testid="navbar-small" position="sticky" top={0} bg="cream" zIndex="sticky">
-      <Container maxW="container.lg">
-        <HStack spacing={4} py={3}>
-          <Box flex="1">
-            <Button p={2} data-testid="toggle-menu" onClick={onOpen}>
-              <IconMenu w="1.5rem" />
+      <MotionBox
+        initial={false}
+        animate={isOpen ? 'open' : 'closed'}
+        custom={height}
+        ref={containerRef}
+        pos="absolute"
+        left={0}
+        h="100vh"
+        w="300px"
+      >
+        <MotionBox
+          pos="absolute"
+          left={0}
+          top={0}
+          w="100%"
+          h="100%"
+          bg="yellow"
+          variants={sidebar}
+          pointerEvents="none"
+        >
+          <Container maxW="container.lg" py="8px">
+            <Button p={2} data-testid="toggle-menu" onClick={onToggle} pointerEvents="all">
+              {isOpen ? <IconClose w="1.5rem" /> : <IconMenu w="1.5rem" />}
             </Button>
-          </Box>
-          <Box w="81px">
-            <Logo />
-          </Box>
-          <Box display="flex" flex="1"></Box>
-        </HStack>
-      </Container>
-      <Drawer placement="top" onClose={onClose} isOpen={isOpen}>
-        <DrawerOverlay bg="orange" transform={isOpen ? 'none' : 'translateY(-100%)'} />
-        <DrawerContent bg="cream" boxShadow="none" zIndex="docked">
-          <DrawerHeader p={3}>
-            <Button p={2} onClick={onClose}>
-              <IconClose w="1.5rem" />
-            </Button>
-          </DrawerHeader>
-          <DrawerBody p={3}>
-            <Flex direction="column">
+            <Flex direction="column" pointerEvents="all">
               {menu?.map(({ header_name, header_page }) => (
                 <DocLink key={header_name} doc={header_page} passHref>
                   <Box
                     alignSelf="flex-start"
-                    display="inline-block"
                     as="a"
                     p={3}
-                    bg="orange"
-                    mb="2px"
-                    textTransform="uppercase"
-                    letterSpacing="wider"
-                    color="cream"
-                    fontWeight="bold"
+                    fontFamily="display"
+                    letterSpacing="tight"
+                    fontWeight="400"
+                    fontSize="4xl"
                   >
                     {header_name}
                   </Box>
                 </DocLink>
               ))}
             </Flex>
-          </DrawerBody>
-        </DrawerContent>
-      </Drawer>
+          </Container>
+        </MotionBox>
+      </MotionBox>
+      <Container maxW="container.lg">
+        <HStack spacing={4} py={3}>
+          <Box flex="1"></Box>
+          <Box w="81px">
+            <Logo />
+          </Box>
+          <Box display="flex" flex="1"></Box>
+        </HStack>
+      </Container>
     </Box>
   );
 };
