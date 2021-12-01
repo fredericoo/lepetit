@@ -1,0 +1,16 @@
+{
+  "name": "Le Petit",
+  "short_name": "LePetit",
+  "icons": [
+    {
+      "src": "/favicon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "start_url": "https://lepetit.cc",
+  "background_color": "#fbf2e9",
+  "theme_color": "#f6ba44",
+  "display": "fullscreen"
+}
