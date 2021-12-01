@@ -1,6 +1,8 @@
 import Prismic from '@prismicio/client';
 import { Document } from '@prismicio/client/types/documents';
 import { Link } from 'prismic-reactjs';
+import PrismicDocument from './types/Document';
+import HeaderFooterData from './types/HeaderFooterData';
 
 export const apiEndpoint = 'https://lepetit.cdn.prismic.io/api/v2';
 
@@ -18,6 +20,6 @@ export const resolveHref = (doc: Document | Link): string => {
 
 export const client = Prismic.client(apiEndpoint);
 
-export const getHeaderAndFooter = async (): Promise<Document> => {
+export const getHeaderAndFooter = async (): Promise<PrismicDocument<HeaderFooterData>> => {
   return await client.getSingle('cabecalho_rodape', {});
 };

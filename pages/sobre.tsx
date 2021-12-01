@@ -1,10 +1,27 @@
-import { Box, Circle, Container, Grid, GridItem, Heading, Text } from '@chakra-ui/react';
-import { getHeaderAndFooter } from 'app/lib/prismic';
+import { Box, Circle, Container, Grid, GridItem, Heading } from '@chakra-ui/react';
+import Picture from 'app/components/Picture';
+import SEO from 'app/components/SEO';
+import { getHeaderAndFooter, client } from 'app/lib/prismic';
+import AboutData from 'app/lib/prismic/types/AboutData';
+import PrismicDocument from 'app/lib/prismic/types/Document';
+import HeaderFooterData from 'app/lib/prismic/types/HeaderFooterData';
 import { GetStaticProps } from 'next';
+import { RichText } from 'prismic-reactjs';
+import { Fragment } from 'react';
 
-const AboutPage: React.VFC = () => {
+type AboutPageProps = {
+  headerAndFooter: PrismicDocument<HeaderFooterData>;
+  aboutPage: PrismicDocument<AboutData>;
+};
+
+const AboutPage: React.VFC<AboutPageProps> = ({ aboutPage }) => {
   return (
     <Container maxW="container.lg" py={16}>
+      <SEO
+        title={aboutPage.data.seo_title}
+        imageUrl={aboutPage.data.seo_img.url}
+        desc={aboutPage.data.seo_desc}
+      />
       <Heading
         as="h1"
         size="3xl"
@@ -15,52 +32,56 @@ const AboutPage: React.VFC = () => {
         textAlign="center"
         mb={8}
       >
-        Produção cultural sensível & com afeto
+        {RichText.asText(aboutPage.data.about_title)}
       </Heading>
 
       <Grid gap={8} templateColumns="repeat(12, 1fr)">
-        <GridItem gridColumn={{ base: '1/13', md: '4/11' }} gridRow={{ md: '1/3' }} zIndex="2">
-          <Text fontSize="xl" fontFamily="heading">
-            A Le Petit foi fundada em 2011 em Minas Gerais. A empresa é voltada para assessoria de
-            projetos na área cultural, produção editorial, desenvolvimento e acompanhamento
-            estratégicos de marcas e identidades visuais. É signatária da WEPs da ONU Mulheres,
-            comprometendo a fazer diferença na igualdade de gênero e no empoderamento das mulheres
-            no local de trabalho onde atua.
-          </Text>
+        <GridItem
+          fontSize="xl"
+          fontFamily="heading"
+          gridColumn={{ base: '1/13', md: '4/11' }}
+          gridRow={{ md: '1/3' }}
+          zIndex="2"
+        >
+          <RichText render={aboutPage.data.about_text} />
         </GridItem>
         <Circle
           gridColumn={{ base: '1/13', md: '2/7' }}
           bg="pink"
           pb="100%"
           h="0"
-          gridRow={{ md: '2/4' }}
+          gridRow={{ base: '1', md: '2/4' }}
         />
-        <GridItem gridColumn={{ base: '1/13', md: '1/5' }} gridRow={{ md: '3/4' }}>
-          <Box w="100%" h="0px" pb="110%" bg="gray.200" />
-        </GridItem>
-        <GridItem gridColumn={{ base: '1/13', md: '5/9' }} gridRow={{ md: '3/4' }}>
-          <Heading
-            fontFamily="body"
-            textTransform="uppercase"
-            size="sm"
-            fontWeight="300"
-            letterSpacing="wider"
-            as="h2"
-            mb={2}
-          >
-            Daniela Fernandes
-          </Heading>
-          <Text fontFamily="heading">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-            incididunt ut labore et dolore magna aliqua. Bibendum est ultricies integer quis.
-            Iaculis urna id volutpat lacus laoreet. Mauris vitae ultricies leo integer malesuada. Ac
-            odio tempor orci dapibus ultrices in. Egestas diam in arcu cursus euismod. Dictum fusce
-            ut placerat orci nulla. Tincidunt ornare massa eget egestas purus viverra accumsan in
-            nisl. Tempor id eu nisl nunc mi ipsum faucibus. Fusce id velit ut tortor pretium. Massa
-            ultricies mi quis hendrerit dolor magna eget. Nullam eget felis eget nunc lobortis.
-            Faucibus ornare
-          </Text>
-        </GridItem>
+        {aboutPage.data.about_team?.map((member) => (
+          <Fragment key={RichText.asText(member.team_name)}>
+            <GridItem gridColumn={{ base: '1/13', md: '1/5' }} gridRow={{ md: '3/4' }}>
+              {member && (
+                <Picture
+                  src={member.team_image.url}
+                  width={member.team_image.dimensions.width}
+                  height={member.team_image.dimensions.height}
+                  alt={member.team_image.alt}
+                />
+              )}
+            </GridItem>
+            <GridItem gridColumn={{ base: '1/13', md: '5/10' }} gridRow={{ md: '3/4' }}>
+              <Heading
+                fontFamily="body"
+                textTransform="uppercase"
+                size="sm"
+                fontWeight="300"
+                letterSpacing="wider"
+                as="h2"
+                mb={2}
+              >
+                {RichText.asText(member.team_name)}
+              </Heading>
+              <Box fontFamily="heading" sx={{ 'p+p': { mt: '1em' } }}>
+                <RichText render={member.team_bio} />
+              </Box>
+            </GridItem>
+          </Fragment>
+        ))}
       </Grid>
     </Container>
   );
@@ -68,8 +89,9 @@ const AboutPage: React.VFC = () => {
 
 export const getStaticProps: GetStaticProps = async () => {
   const headerAndFooter = await getHeaderAndFooter();
+  const aboutPage = await client.getSingle('sobre', {});
 
-  return { props: { headerAndFooter }, revalidate: 600 };
+  return { props: { headerAndFooter, aboutPage }, revalidate: 600 };
 };
 
 export default AboutPage;

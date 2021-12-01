@@ -4,6 +4,12 @@ import colors from './colors';
 import global from './global';
 import components from './components';
 
-const theme = extendTheme({ fonts, colors, styles: { global }, components });
+const theme = extendTheme({
+  fonts,
+  colors,
+  styles: { global },
+  components,
+  shadows: { outline: 'none' },
+});
 
 export default theme;

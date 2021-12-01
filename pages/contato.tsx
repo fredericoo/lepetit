@@ -1,10 +1,25 @@
 import { Container, Grid, Heading, Text } from '@chakra-ui/react';
-import { getHeaderAndFooter } from 'app/lib/prismic';
+import SEO from 'app/components/SEO';
+import { client, getHeaderAndFooter } from 'app/lib/prismic';
+import ContactData from 'app/lib/prismic/types/contato';
+import PrismicDocument from 'app/lib/prismic/types/Document';
+import HeaderFooterData from 'app/lib/prismic/types/HeaderFooterData';
 import { GetStaticProps } from 'next';
+import { RichText } from 'prismic-reactjs';
 
-const AboutPage: React.VFC = () => {
+type AboutPageProps = {
+  headerAndFooter: PrismicDocument<HeaderFooterData>;
+  contactPage: PrismicDocument<ContactData>;
+};
+
+const AboutPage: React.VFC<AboutPageProps> = ({ contactPage }) => {
   return (
     <Container maxW="container.lg" py={16}>
+      <SEO
+        title={contactPage.data.seo_title}
+        imageUrl={contactPage.data.seo_img.url}
+        desc={contactPage.data.seo_desc}
+      />
       <Grid gap={8} templateColumns="repeat(12, 1fr)">
         <Heading
           as="h1"
@@ -17,7 +32,7 @@ const AboutPage: React.VFC = () => {
           fontStyle="italic"
           gridColumn={{ base: '1/13', md: '3/7' }}
         >
-          Contato
+          {RichText.asText(contactPage.data.title)}
         </Heading>
 
         <Text gridColumn={{ base: '1/13', md: '3/7' }} fontFamily="heading">
@@ -34,8 +49,8 @@ const AboutPage: React.VFC = () => {
 
 export const getStaticProps: GetStaticProps = async () => {
   const headerAndFooter = await getHeaderAndFooter();
-
-  return { props: { headerAndFooter }, revalidate: 600 };
+  const contactPage = await client.getSingle('contato', {});
+  return { props: { headerAndFooter, contactPage }, revalidate: 600 };
 };
 
 export default AboutPage;

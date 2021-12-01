@@ -16,6 +16,7 @@ import PrismicDocument from 'app/lib/prismic/types/Document';
 import HeaderFooterData from 'app/lib/prismic/types/HeaderFooterData';
 import ProjectData from 'app/lib/prismic/types/ProjectDocument';
 import ProjectThumb from 'app/components/ProjectThumb';
+import SEO from 'app/components/SEO';
 import { resolveHref } from 'app/lib/prismic';
 import IconShuffle from 'app/components/Icon/IconShuffle';
 
@@ -35,6 +36,7 @@ const Home: React.FC<HomeProps> = ({ projects }) => {
 
   return (
     <Box overflow="hidden" ref={dragConstraints}>
+      <SEO />
       <Container maxW="container.lg" py={8}>
         <Grid gap={8} templateColumns="repeat(12, 1fr)" templateRows="80vh min-content 1fr">
           <GridItem
