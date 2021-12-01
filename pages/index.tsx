@@ -19,9 +19,11 @@ import ProjectThumb from 'app/components/ProjectThumb';
 import SEO from 'app/components/SEO';
 import { resolveHref } from 'app/lib/prismic';
 import IconShuffle from 'app/components/Icon/IconShuffle';
+import ApiSearchResponse from '@prismicio/client/types/ApiSearchResponse';
+import Link from 'next/link';
 
 type HomeProps = {
-  projects: PrismicDocument<ProjectData>[];
+  projects: Omit<ApiSearchResponse, 'results'> & { results: PrismicDocument<ProjectData>[] };
   headerAndFooter: PrismicDocument<HeaderFooterData>;
 };
 
@@ -160,9 +162,16 @@ const Home: React.FC<HomeProps> = ({ projects }) => {
             </Box>
           </Box>
           <SimpleGrid columns={{ base: 2, md: 3 }} gap={{ base: 4, lg: 8 }} zIndex={2}>
-            {projects.map((project) => (
+            {projects.results.map((project) => (
               <ProjectThumb key={project.id} data={project.data} href={resolveHref(project)} />
             ))}
+            {projects.total_pages > 1 && (
+              <Link href="projetos" passHref>
+                <Button as="a" gridColumn="1/-1">
+                  Ver todos os {projects.total_results_size} projetos
+                </Button>
+              </Link>
+            )}
           </SimpleGrid>
         </Container>
       </Box>
@@ -170,11 +179,11 @@ const Home: React.FC<HomeProps> = ({ projects }) => {
   );
 };
 
-export const getStaticProps: GetStaticProps<HomeProps> = async () => {
-  const projects = await client.query('[at(document.type, "projeto")]');
+export const getStaticProps: GetStaticProps = async () => {
+  const projects = await client.query('[at(document.type, "projeto")]', { pageSize: 6 });
   const headerAndFooter = await getHeaderAndFooter();
 
-  return { props: { projects: projects.results || [], headerAndFooter }, revalidate: 600 };
+  return { props: { projects: projects || [], headerAndFooter }, revalidate: 600 };
 };
 
 export default Home;

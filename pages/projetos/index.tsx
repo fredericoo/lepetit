@@ -48,7 +48,7 @@ const ProjectsPage: React.FC<ProjectsPageProps> = ({ projects, projectsPage }) =
 };
 
 export const getStaticProps: GetStaticProps = async () => {
-  const projects = await client.query('[at(document.type, "projeto")]');
+  const projects = await client.query('[at(document.type, "projeto")]', { pageSize: 100 });
   const headerAndFooter = await getHeaderAndFooter();
   const projectsPage = await client.getSingle('projetos', {});
 
