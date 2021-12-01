@@ -10,7 +10,7 @@ interface SEOProps {
 
 const TERMS = {
   title: 'Le Petit',
-  baseURL: 'https://lepetit.com.br',
+  baseURL: 'https://lepetit.cc',
 };
 
 const SEO: React.FC<SEOProps> = ({ title, desc, type, imageUrl }) => {
