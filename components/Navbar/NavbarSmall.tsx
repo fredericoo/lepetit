@@ -6,6 +6,7 @@ import { useEffect, useRef } from 'react';
 import IconClose from '../Icon/IconClose';
 import IconMenu from '../Icon/IconMenu';
 import { motion } from 'framer-motion';
+import Link from 'next/link';
 import { useDimensions } from 'app/lib/hooks/useDimensions';
 
 const sidebar = {
@@ -84,9 +85,11 @@ const NavbarSmall: React.FC<MenuProps> = ({ menu, currentPath }) => {
       <Container maxW="container.lg">
         <HStack spacing={4} py={3}>
           <Box flex="1"></Box>
-          <Box w="81px">
-            <Logo />
-          </Box>
+          <Link href="/" passHref>
+            <Box w="81px">
+              <Logo />
+            </Box>
+          </Link>
           <Box display="flex" flex="1"></Box>
         </HStack>
       </Container>
