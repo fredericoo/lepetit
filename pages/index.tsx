@@ -103,7 +103,7 @@ const Home: React.FC<HomeProps> = ({ projects }) => {
               p={4}
               pointerEvents="all"
               onClick={() => setSeed(~~(Math.random() * 1000))}
-              zIndex="overlay"
+              zIndex="docked"
             >
               <IconShuffle w="1rem" />
             </Button>
