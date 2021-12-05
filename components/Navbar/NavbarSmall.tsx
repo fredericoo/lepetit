@@ -37,7 +37,7 @@ const NavbarSmall: React.FC<MenuProps> = ({ menu, currentPath }) => {
   useEffect(() => onClose(), [currentPath, onClose]);
 
   return (
-    <Box as="nav" data-testid="navbar-small" position="sticky" top={0} bg="cream" zIndex="sticky">
+    <Box as="nav" data-testid="navbar-small" position="sticky" top={0} bg="cream" zIndex="popover">
       <MotionBox
         initial={false}
         animate={isOpen ? 'open' : 'closed'}
@@ -47,22 +47,27 @@ const NavbarSmall: React.FC<MenuProps> = ({ menu, currentPath }) => {
         left={0}
         h="100vh"
         w="300px"
+        pointerEvents="none"
       >
-        <MotionBox
-          pos="absolute"
-          left={0}
-          top={0}
-          w="100%"
-          h="100%"
-          bg="yellow"
-          variants={sidebar}
-          pointerEvents="none"
-        >
+        <MotionBox pos="absolute" left={0} top={0} w="100%" h="100%" bg="yellow" variants={sidebar}>
           <Container maxW="container.lg" py="8px">
             <Button p={2} data-testid="toggle-menu" onClick={onToggle} pointerEvents="all">
               {isOpen ? <IconClose w="1.5rem" /> : <IconMenu w="1.5rem" />}
             </Button>
             <Flex direction="column" pointerEvents="all">
+              <Link href="/" passHref>
+                <Box
+                  alignSelf="flex-start"
+                  as="a"
+                  p={3}
+                  fontFamily="display"
+                  letterSpacing="tight"
+                  fontWeight="400"
+                  fontSize="4xl"
+                >
+                  Home
+                </Box>
+              </Link>
               {menu?.map(({ header_name, header_page }) => (
                 <DocLink key={header_name} doc={header_page} passHref>
                   <Box
@@ -83,14 +88,12 @@ const NavbarSmall: React.FC<MenuProps> = ({ menu, currentPath }) => {
         </MotionBox>
       </MotionBox>
       <Container maxW="container.lg">
-        <HStack spacing={4} py={3}>
-          <Box flex="1"></Box>
+        <HStack spacing={4} py={3} justify="center">
           <Link href="/" passHref>
             <Box w="81px">
               <Logo />
             </Box>
           </Link>
-          <Box display="flex" flex="1"></Box>
         </HStack>
       </Container>
     </Box>
