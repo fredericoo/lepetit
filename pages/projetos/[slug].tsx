@@ -54,6 +54,10 @@ const ProjectPage: React.VFC<ProjectPageProps> = ({ project }) => {
                             height={1000}
                             layout="intrinsic"
                           />
+
+                          <Text textAlign="center">
+                            <RichText render={item.image_captions} />
+                          </Text>
                         </Box>
                       );
                     })}
@@ -62,7 +66,7 @@ const ProjectPage: React.VFC<ProjectPageProps> = ({ project }) => {
               );
             case 'texto':
               return (
-                <Box key={index} py={8}>
+                <Box key={index} py={8} fontSize="xl" maxW="77ch" margin="auto">
                   <RichText render={block.primary.text} />
                 </Box>
               );
