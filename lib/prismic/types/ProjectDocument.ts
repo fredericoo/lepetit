@@ -3,31 +3,46 @@ import { RichTextBlock } from 'prismic-reactjs';
 import SEO from './SEO';
 
 export type CarouselSlice = {
-  gallery_image: Image;
-  image_captions: RichTextBlock[];
+  slice_type: 'image_gallery';
+  items: {
+    gallery_image: Image;
+    image_captions: RichTextBlock[];
+  }[];
 };
 
 export type TextSlice = {
-  title: RichTextBlock[];
-  text: RichTextBlock[];
+  slice_type: 'texto';
+  primary: {
+    title: RichTextBlock[];
+    text: RichTextBlock[];
+  };
 };
 
 export type ImageSlice = {
-  image: Image;
-  caption: string;
+  slice_type: 'imagem';
+  primary: {
+    image: Image;
+    caption: string;
+  };
 };
 
 export type ImageTextSlice = {
-  image: Image;
-  card_title: RichTextBlock[];
-  text: RichTextBlock[];
-  cta: RichTextBlock[];
-  button_link: LinkField;
+  slice_type: 'imagem + texto';
+  primary: {
+    image: Image;
+    card_title: RichTextBlock[];
+    text: RichTextBlock[];
+    cta: RichTextBlock[];
+    button_link: LinkField;
+  };
 };
 
 export type VideoSlice = {
-  movie: LinkField;
-  caption: string;
+  slice_type: 'vinheta';
+  primary: {
+    movie: LinkField;
+    caption: string;
+  };
 };
 
 type ProjectData = {
@@ -38,6 +53,7 @@ type ProjectData = {
   cat_b: boolean;
   cat_c: boolean;
   project_link: { link_name: string; link_url: LinkField; link_text: RichTextBlock[] };
+  body: (CarouselSlice | TextSlice | ImageSlice | ImageTextSlice | VideoSlice)[];
 } & SEO;
 
 export default ProjectData;

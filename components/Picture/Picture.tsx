@@ -6,7 +6,7 @@ type PictureProps = {
   bg?: string;
 };
 
-const Picture: React.FC<ImageProps & PictureProps> = ({ bg = 'gray.100', ...props }) => {
+const Picture: React.FC<ImageProps & PictureProps> = ({ bg = 'white', ...props }) => {
   const [hasLoaded, setLoaded] = useState(false);
   if (!props.src) return null;
 

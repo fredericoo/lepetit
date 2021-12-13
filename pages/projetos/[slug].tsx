@@ -6,7 +6,7 @@ import { Box, Container, Text, SimpleGrid } from '@chakra-ui/react';
 import { RichText } from 'prismic-reactjs';
 import ProjectCover from 'app/components/ProjectCover';
 import Carousel from 'app/components/Carousel';
-import Image from 'next/image';
+import Picture from 'app/components/Picture';
 
 type ProjectPageProps = {
   project?: PrismicDocument<ProjectData>;
@@ -37,20 +37,50 @@ const ProjectPage: React.VFC<ProjectPageProps> = ({ project }) => {
         </SimpleGrid>
       </Box>
       <Container maxW="container.lg">
-        <Carousel width="100%" height="300px">
-          {new Array(10).fill(0).map((_, i) => {
-            return (
-              <Image
-                key={i}
-                width="600"
-                height="600"
-                alt="lol"
-                src={`http://placekitten.com/${300 + i}/${300 + i}`}
-                unoptimized
-              />
-            );
-          })}
-        </Carousel>
+        {project.data.body.map((block, index) => {
+          switch (block.slice_type) {
+            case 'image_gallery':
+              return (
+                <Box key={index} py={8}>
+                  <Carousel width="100%" height="300px">
+                    {block.items.map((item, index) => {
+                      return (
+                        <Box key={index}>
+                          <Picture
+                            objectFit="contain"
+                            src={item.gallery_image.url}
+                            alt={item.gallery_image.alt}
+                            width={1000}
+                            height={1000}
+                            layout="intrinsic"
+                          />
+                        </Box>
+                      );
+                    })}
+                  </Carousel>
+                </Box>
+              );
+            case 'texto':
+              return (
+                <Box key={index} py={8}>
+                  <RichText render={block.primary.text} />
+                </Box>
+              );
+            case 'imagem':
+              return (
+                <Box key={index} py={8}>
+                  <Picture
+                    src={block.primary.image.url}
+                    alt={block.primary.image.alt}
+                    width={block.primary.image.dimensions.width}
+                    height={block.primary.image.dimensions.height}
+                  />
+                </Box>
+              );
+            default:
+              return null;
+          }
+        })}
       </Container>
     </>
   );

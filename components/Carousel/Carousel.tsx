@@ -1,4 +1,4 @@
-import { Box, HStack, Center, Button, useId } from '@chakra-ui/react';
+import { Box, HStack, Center, Button } from '@chakra-ui/react';
 import { styled } from '@chakra-ui/system';
 import { useEffect, useRef, useState } from 'react';
 import { AiOutlineArrowLeft, AiOutlineArrowRight } from 'react-icons/ai';
@@ -16,12 +16,11 @@ const Controls = styled(HStack, {
     top: 0,
     left: 0,
     justifyContent: 'space-between',
-    px: 4,
+    px: { base: 2, md: 4 },
   },
 });
 
 const Carousel: React.FC<CarouselProps> = ({ children, width, height }) => {
-  const carouselId = useId('', 'carousel');
   const carouselRef = useRef<HTMLDivElement>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
   const slideCount = Array.isArray(children) ? children.length : 1;
@@ -41,6 +40,13 @@ const Carousel: React.FC<CarouselProps> = ({ children, width, height }) => {
     }
   }, [slideCount]);
 
+  const scrollToIndex = (index: number): void => {
+    const carousel = carouselRef.current;
+    if (carousel) {
+      carousel.scrollLeft = (index * carousel.scrollWidth) / slideCount;
+    }
+  };
+
   if (!Array.isArray(children)) return null;
 
   return (
@@ -49,11 +55,12 @@ const Carousel: React.FC<CarouselProps> = ({ children, width, height }) => {
         <Button
           aria-label="Previous slide"
           variant="solid"
-          as="a"
-          w="16"
-          h="16"
-          href={`#${carouselId}-slide-${currentIndex - 1}`}
+          w={{ base: 10, md: 12 }}
+          h={{ base: 10, md: 12 }}
+          p={0}
+          onClick={() => scrollToIndex(currentIndex - 1)}
           zIndex="2"
+          opacity={{ base: 0.5, md: 1 }}
           isDisabled={currentIndex < 1}
         >
           <AiOutlineArrowLeft />
@@ -61,11 +68,12 @@ const Carousel: React.FC<CarouselProps> = ({ children, width, height }) => {
         <Button
           aria-label="Next slide"
           variant="solid"
-          as="a"
-          w="16"
-          h="16"
-          href={`#${carouselId}-slide-${currentIndex + 1}`}
+          w={{ base: 10, md: 12 }}
+          h={{ base: 10, md: 12 }}
+          p={0}
+          onClick={() => scrollToIndex(currentIndex + 1)}
           zIndex="2"
+          opacity={{ base: 0.7, md: 1 }}
           isDisabled={currentIndex >= children.length - 1}
         >
           <AiOutlineArrowRight />
@@ -89,8 +97,8 @@ const Carousel: React.FC<CarouselProps> = ({ children, width, height }) => {
           <Center
             borderRadius="lg"
             overflow="hidden"
-            id={`${carouselId}-slide-${index}`}
             minH={height}
+            maxW={width}
             key={index}
             sx={{ scrollSnapAlign: 'center', flexShrink: 0 }}
           >
