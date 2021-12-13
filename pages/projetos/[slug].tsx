@@ -45,7 +45,7 @@ const ProjectPage: React.VFC<ProjectPageProps> = ({ project }) => {
                   <Carousel width="100%" height="300px">
                     {block.items.map((item, index) => {
                       return (
-                        <Box key={index}>
+                        <Box key={index} bg="white">
                           <Picture
                             objectFit="contain"
                             src={item.gallery_image.url}
