@@ -21,24 +21,32 @@ import { resolveHref } from 'app/lib/prismic';
 import IconShuffle from 'app/components/Icon/IconShuffle';
 import ApiSearchResponse from '@prismicio/client/types/ApiSearchResponse';
 import Link from 'next/link';
+import HomeData from 'app/lib/prismic/types/HomeData';
+import { RichText } from 'prismic-reactjs';
 
 type HomeProps = {
   projects: Omit<ApiSearchResponse, 'results'> & { results: PrismicDocument<ProjectData>[] };
   headerAndFooter: PrismicDocument<HeaderFooterData>;
+  homePage: PrismicDocument<HomeData> | null;
 };
 
 type Roundness = 'top' | 'bottom' | 'full';
 const roundnesses: Roundness[] = ['top', 'bottom', 'full'];
 const colours = ['orange', 'pink', 'blue', 'yellow'];
 
-const Home: React.FC<HomeProps> = ({ projects }) => {
+const Home: React.FC<HomeProps> = ({ projects, homePage }) => {
   const dragConstraints = useRef(null);
   const [seed, setSeed] = useState(0);
   const [hasInteracted, setHasInteracted] = useState(false);
+  if (!homePage?.data) return null;
 
   return (
     <Box overflow="hidden" ref={dragConstraints}>
-      <SEO />
+      <SEO
+        title={homePage.data.seo_title}
+        imageUrl={homePage.data.seo_img.url}
+        desc={homePage.data.seo_desc}
+      />
       <Container maxW="container.lg" py={8}>
         <Grid gap={8} templateColumns="repeat(12, 1fr)" templateRows="80vh min-content 1fr">
           <GridItem
@@ -92,12 +100,10 @@ const Home: React.FC<HomeProps> = ({ projects }) => {
               lineHeight="1"
               mb={6}
             >
-              Produção cultural sensível & com afeto
+              <RichText render={homePage.data.home_title} />
             </Heading>
             <Text fontFamily="heading" letterSpacing="-.01em" fontSize="lg" fontWeight="400" mb={4}>
-              Texto de exemplo pra preencher linguiça Lorem ipsum dolor sit amet, consectetur
-              adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-              Bibendum est ultricies integer quis. Iaculis urna id volutpat lacus laoreet.
+              <RichText render={homePage.data.home_text} />
             </Text>
             <Button
               p={4}
@@ -117,16 +123,12 @@ const Home: React.FC<HomeProps> = ({ projects }) => {
               lineHeight="1"
               as="h2"
             >
-              Sobre
+              <RichText render={homePage.data.title} />
             </Heading>
           </GridItem>
           <GridItem gridColumn={{ base: '1 / 9', lg: '4 / 11' }} gridRow="3">
             <Text fontSize={{ base: 'lg', lg: 'xl' }} fontFamily="heading">
-              A Le Petit foi fundada em 2011 em Minas Gerais. A empresa é voltada para assessoria de
-              projetos na área cultural, produção editorial, desenvolvimento e acompanhamento
-              estratégicos de marcas e identidades visuais. É signatária da WEPs da ONU Mulheres,
-              comprometendo a fazer diferença na igualdade de gênero e no empoderamento das mulheres
-              no local de trabalho onde atua.{' '}
+              <RichText render={homePage.data.text} />
             </Text>
           </GridItem>
         </Grid>
@@ -181,9 +183,13 @@ const Home: React.FC<HomeProps> = ({ projects }) => {
 
 export const getStaticProps: GetStaticProps = async () => {
   const projects = await client.query('[at(document.type, "projeto")]', { pageSize: 6 });
+  const homePage = await client.getSingle('home', {});
   const headerAndFooter = await getHeaderAndFooter();
 
-  return { props: { projects: projects || [], headerAndFooter }, revalidate: 600 };
+  return {
+    props: { projects: projects || [], headerAndFooter, homePage: homePage || null },
+    revalidate: 600,
+  };
 };
 
 export default Home;
